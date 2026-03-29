@@ -152,12 +152,17 @@ public class TradeGui extends GuiFrame {
         int n = 0;
         for (int slot : otherSlots) {
             if (otherItems.get(n) != null)
-                gui.updateItem(slot, new GuiItem(otherItems.get(n), event -> event.setCancelled(true)));
+                gui.updateItem(slot, new GuiItem(otherItems.get(n).clone(), event -> event.setCancelled(true)));
             n++;
         }
     }
 
     private void handleClickTop(InventoryClickEvent event) {
+        if (event.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (confirmCooldown.hasCooldown(player.getPlayer())) {
             event.setCancelled(true);
             return;
@@ -191,6 +196,11 @@ public class TradeGui extends GuiFrame {
     }
 
     private void handleClickBottom(InventoryClickEvent event) {
+        if (event.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
+            event.setCancelled(true);
+            return;
+        }
+
         ItemStack it = getItem(event);
 
         if (BlacklistUtils.isBlacklisted(it)) {

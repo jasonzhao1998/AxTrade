@@ -18,13 +18,16 @@ import com.artillexstudios.axtrade.lang.LanguageManager;
 import com.artillexstudios.axtrade.listeners.EntityInteractListener;
 import com.artillexstudios.axtrade.listeners.TradeListeners;
 import com.artillexstudios.axtrade.safety.SafetyManager;
+import com.artillexstudios.axtrade.trade.Trade;
 import com.artillexstudios.axtrade.trade.TradeTicker;
+import com.artillexstudios.axtrade.trade.Trades;
 import com.artillexstudios.axtrade.utils.NumberUtils;
 import com.artillexstudios.axtrade.utils.UpdateNotifier;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public final class AxTrade extends AxPlugin {
     public static Config CONFIG;
@@ -82,6 +85,10 @@ public final class AxTrade extends AxPlugin {
     }
 
     public void disable() {
+        for (Trade trade : new ArrayList<>(Trades.getTrades())) {
+            trade.abort();
+        }
+
         if (metrics != null) metrics.cancel();
         SafetyManager.stop();
     }
